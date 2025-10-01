@@ -154,6 +154,16 @@ async function printfulFetch<T>(endpoint: string, init?: RequestInit): Promise<T
   return response.json() as Promise<T>;
 }
 
+type CachedAllProducts = {
+  products: Awaited<ReturnType<typeof listPrintfulProducts>>["products"];
+  total: number;
+  expiresAt: number;
+};
+
+let cachedAllProducts: CachedAllProducts | null = null;
+const parsedTTL = Number.parseInt(process.env.PRINTFUL_CACHE_TTL ?? "60", 10);
+const CACHE_TTL_MS = Number.isFinite(parsedTTL) ? parsedTTL * 1000 : 60_000;
+
 export async function listPrintfulProducts(options: ProductListOptions = {}) {
   const { limit = 12, offset = 0 } = options;
   const params = new URLSearchParams({ limit: String(limit), offset: String(offset) });
@@ -184,6 +194,14 @@ export async function listPrintfulProducts(options: ProductListOptions = {}) {
 }
 
 export async function listAllPrintfulProducts() {
+  const now = Date.now();
+  if (cachedAllProducts && cachedAllProducts.expiresAt > now) {
+    return {
+      products: cachedAllProducts.products,
+      total: cachedAllProducts.total,
+    };
+  }
+
   const pageSize = 100;
   let offset = 0;
   let total = Infinity;
@@ -197,10 +215,18 @@ export async function listAllPrintfulProducts() {
     offset += paging.limit;
   }
 
-  return {
+  const result = {
     products: aggregated,
     total: aggregated.length,
   };
+
+  cachedAllProducts = {
+    products: aggregated,
+    total: aggregated.length,
+    expiresAt: now + CACHE_TTL_MS,
+  };
+
+  return result;
 }
 
 export async function getPrintfulProduct(productId: number) {

@@ -20,8 +20,11 @@ const AudioPlayer: React.FC<{ initialTracks: Track[] }> = ({ initialTracks }) =>
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const isInterrupted = useRef(false);
 
-  // Detect iOS (unconditional)
-  const isIOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
+  // Robust iOS detection (unconditional)
+  const isIOS = typeof navigator !== 'undefined' && (
+    /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && 'maxTouchPoints' in navigator && navigator.maxTouchPoints > 1)
+  );
 
   // Memoize length to stabilize deps
   const tracksLength = useMemo(() => initialTracks.length, [initialTracks]);
@@ -48,6 +51,7 @@ const AudioPlayer: React.FC<{ initialTracks: Track[] }> = ({ initialTracks }) =>
       src: [currentTrack.src],
       format: ['mp3'],
       html5: true,
+      pool: 1, // Single audio element to prevent pool exhaustion
       onload: () => {
         setProgress(0);
         if (navigator.mediaSession) {
@@ -55,6 +59,12 @@ const AudioPlayer: React.FC<{ initialTracks: Track[] }> = ({ initialTracks }) =>
             duration: howlerRef.current?.duration() || 0,
             position: 0,
           });
+        }
+      },
+      onunlock: () => {
+        // Ensure immediate release on iOS-like suspends
+        if (howlerRef.current) {
+          howlerRef.current.stop();
         }
       },
       onend: () => {
@@ -187,7 +197,6 @@ const AudioPlayer: React.FC<{ initialTracks: Track[] }> = ({ initialTracks }) =>
 
     const checkStall = () => {
       if (isPlaying && audio.currentTime === lastTime) {
-        // Simple stall check (timeupdate fires ~250ms)
         if (Date.now() - (lastTime * 1000) > 7000) {
           setIsPlaying(false);
           isInterrupted.current = true;
@@ -414,7 +423,7 @@ const AudioPlayer: React.FC<{ initialTracks: Track[] }> = ({ initialTracks }) =>
             />
           </div>
         </div>
-        {isIOS && <audio ref={audioRef} preload="auto" />}
+        {isIOS && <audio ref={audioRef} preload="auto" crossOrigin="anonymous" />}
       </div>
     </div>
   );
