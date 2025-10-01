@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { Howl } from "howler";
 import { Play, Pause, SkipBack, SkipForward } from "lucide-react";
@@ -8,6 +9,7 @@ interface Track {
   src: string;
   title: string;
   artist: string;
+  cover?: string;
 }
 
 const AudioPlayer: React.FC<{ initialTracks: Track[] }> = ({ initialTracks }) => {
@@ -216,6 +218,15 @@ const AudioPlayer: React.FC<{ initialTracks: Track[] }> = ({ initialTracks }) =>
       title: currentTrack.title,
       artist: currentTrack.artist,
       album: "Vispea Sound Machine",
+      artwork: currentTrack.cover
+        ? [
+            {
+              src: currentTrack.cover,
+              sizes: "512x512",
+              type: currentTrack.cover.endsWith(".webp") ? "image/webp" : "image/jpeg",
+            },
+          ]
+        : undefined,
     });
 
     const handlePlay = () => {
@@ -345,7 +356,19 @@ const AudioPlayer: React.FC<{ initialTracks: Track[] }> = ({ initialTracks }) =>
       <div className="fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-r from-gray-900 to-black p-4 text-white shadow-2xl">
         <div className="flex items-center justify-between">
           <div className="flex flex-1 items-center space-x-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-md bg-gray-700">🎵</div>
+            <div className="relative h-12 w-12 overflow-hidden rounded-md bg-gray-700">
+              {currentTrack.cover ? (
+                <Image
+                  src={currentTrack.cover}
+                  alt={currentTrack.title}
+                  fill
+                  sizes="48px"
+                  className="object-cover"
+                />
+              ) : (
+                <span className="flex h-full w-full items-center justify-center text-lg">🎵</span>
+              )}
+            </div>
             <div className="text-left">
               <p className="text-sm font-semibold">{currentTrack.title}</p>
               <p className="text-xs text-gray-400">{currentTrack.artist}</p>
