@@ -3,7 +3,7 @@
 import Image from "next/image";
 import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { Howl } from "howler";
-import { Play, Pause, SkipBack, SkipForward } from "lucide-react";
+import { Play, Pause, SkipBack, SkipForward, ChevronDown, ChevronUp } from "lucide-react";
 
 interface Track {
   src: string;
@@ -16,6 +16,7 @@ const AudioPlayer: React.FC<{ initialTracks: Track[] }> = ({ initialTracks }) =>
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [expanded, setExpanded] = useState(false);
 
   const howlerRef = useRef<Howl | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -348,55 +349,86 @@ const AudioPlayer: React.FC<{ initialTracks: Track[] }> = ({ initialTracks }) =>
     setProgress(value);
   };
 
+  const toggleExpanded = () => setExpanded((prev) => !prev);
+
+  const handleCompactKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      toggleExpanded();
+    }
+  };
+
   return (
-    <div className="flex flex-col gap-3 text-sm text-center text-slate-300">
-      <span className="text-xs font-semibold uppercase tracking-[0.3em] bg-clip-text text-transparent bg-gradient-to-r from-pink-600 to-orange-400">
-        Vispea Sound Machine
-      </span>
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-r from-gray-900 to-black p-4 text-white shadow-2xl">
-        <div className="flex items-center justify-between">
-          <div className="flex flex-1 items-center space-x-4">
-            <div className="relative h-12 w-12 overflow-hidden rounded-md bg-gray-700">
+    <div className="pointer-events-none fixed bottom-0 left-0 right-0 z-50 flex justify-start px-4 pb-4 sm:px-6">
+      <div
+        className={`pointer-events-auto w-full max-w-xs rounded-3xl bg-gradient-to-r from-gray-900 to-black text-white shadow-2xl transition-transform duration-300 sm:max-w-sm lg:max-w-md ${
+          expanded ? "translate-y-0" : "translate-y-[calc(100%_-_56px)]"
+        }`}
+      >
+        <div
+          role="button"
+          tabIndex={0}
+          aria-expanded={expanded}
+          onClick={toggleExpanded}
+          onKeyDown={handleCompactKeyDown}
+          className="flex items-center justify-between rounded-t-3xl px-4 py-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+        >
+          <div className="flex items-center space-x-3">
+            <div className="relative h-11 w-11 overflow-hidden rounded-xl bg-gray-700">
               {currentTrack.cover ? (
-                <Image
-                  src={currentTrack.cover}
-                  alt={currentTrack.title}
-                  fill
-                  sizes="48px"
-                  className="object-cover"
-                />
+                <Image src={currentTrack.cover} alt={currentTrack.title} fill sizes="44px" className="object-cover" />
               ) : (
                 <span className="flex h-full w-full items-center justify-center text-lg">🎵</span>
               )}
             </div>
-            <div className="text-left">
-              <p className="text-sm font-semibold">{currentTrack.title}</p>
-              <p className="text-xs text-gray-400">{currentTrack.artist}</p>
+            <div className="max-w-[9rem] sm:max-w-[10rem]">
+              <p className="truncate text-xs font-semibold sm:text-sm">{currentTrack.title}</p>
+              <p className="truncate text-[10px] text-gray-400 sm:text-xs">{currentTrack.artist}</p>
             </div>
           </div>
-          <div className="flex items-center space-x-6 sm:space-x-4">
-            <SkipBack onClick={() => skip("prev")} className="h-6 w-6 cursor-pointer hover:opacity-80" />
+          <div className="flex items-center space-x-2">
+            <button
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation();
+                togglePlay();
+              }}
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-black sm:h-10 sm:w-10"
+            >
+              {isPlaying ? <Pause className="h-4 w-4 sm:h-5 sm:w-5" /> : <Play className="h-4 w-4 sm:h-5 sm:w-5" />}
+            </button>
+            {expanded ? <ChevronDown className="h-5 w-5" /> : <ChevronUp className="h-5 w-5" />}
+          </div>
+        </div>
+
+        <div
+          className={`grid gap-4 px-4 pb-4 transition-[max-height,opacity] duration-200 ease-in-out ${
+            expanded ? "max-h-[220px] opacity-100" : "max-h-0 opacity-0"
+          }`}
+        >
+          <div className="flex items-center justify-center space-x-6 sm:space-x-8">
+            <SkipBack onClick={() => skip("prev")} className="h-6 w-6 cursor-pointer hover:opacity-80 sm:h-7 sm:w-7" />
             <button
               type="button"
               onClick={togglePlay}
-              className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-black"
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-black sm:h-14 sm:w-14"
             >
-              {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
+              {isPlaying ? <Pause className="h-5 w-5 sm:h-6 sm:w-6" /> : <Play className="h-5 w-5 sm:h-6 sm:w-6" />}
             </button>
-            <SkipForward onClick={() => skip("next")} className="h-6 w-6 cursor-pointer hover:opacity-80" />
+            <SkipForward onClick={() => skip("next")} className="h-6 w-6 cursor-pointer hover:opacity-80 sm:h-7 sm:w-7" />
           </div>
-          <div className="mx-4 flex-1">
-            <input
-              type="range"
-              min="0"
-              max="100"
-              value={progress}
-              onChange={handleSeek}
-              className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-600 [&::-moz-range-thumb]:h-2 [&::-moz-range-thumb]:w-2 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-webkit-slider-thumb]:h-2 [&::-webkit-slider-thumb]:w-2 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white"
-            />
-          </div>
+
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={progress}
+            onChange={handleSeek}
+            className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-700 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white"
+          />
         </div>
-        {isIOS && <audio ref={audioRef} preload="auto" crossOrigin="anonymous" />}
+
+        {isIOS && <audio ref={audioRef} preload="auto" crossOrigin="anonymous" className="hidden" />}
       </div>
     </div>
   );
