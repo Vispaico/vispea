@@ -1,103 +1,100 @@
 import Image from "next/image";
+import Link from "next/link";
+import { HeroVideo } from "@/components/hero-video";
+import { ProductCard } from "@/components/product-card";
+import { listAllPrintfulProducts } from "@/lib/printful";
 
-export default function Home() {
+export default async function HomePage() {
+  let products: Awaited<ReturnType<typeof listAllPrintfulProducts>>["products"] = [];
+  let error: string | null = null;
+
+  try {
+    const response = await listAllPrintfulProducts();
+    products = response.products;
+  } catch (caught) {
+    console.error(caught);
+    error = "Unable to load products. Verify your Printful credential configuration.";
+  }
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="flex flex-col">
+      <div className="relative left-1/2 mt-[-80px] w-screen -translate-x-1/2">
+        <HeroVideo />
+      </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      <section id="catalogue" className="flex flex-col gap-12 px-6 py-16 sm:px-10">
+        <div className="flex flex-col gap-6">
+          <span className="text-sm text-center font-medium uppercase tracking-[0.3em] text-slate-400">
+            Featured Bangers
+          </span>
+          <h2 className="text-3xl text-center font-semibold tracking-tight text-white sm:text-4xl">
+            Wear these and you are as smooth as Phuc
+          </h2>
+          <p className="text-xl text-center text-slate-300">
+            Zero compromise. One type of shirt, black only because colors are for people who need attention.<br/>You already got enough personality. These aren&apos;t fashion statements, they&apos;re conversation enders.<br/><strong className="bg-clip-text text-transparent bg-gradient-to-r from-pink-600 to-orange-400">Grab one before we get bored and move on to the next thing</strong>
+          </p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {error ? (
+          <p className="text-sm text-red-400">{error}</p>
+        ) : products.length === 0 ? (
+          <p className="text-sm text-slate-400">
+            No products available yet.
+          </p>
+        ) : (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {products
+              .slice()
+              .sort((a, b) => {
+                const aOrder = a.sortOrder ?? Number.MAX_SAFE_INTEGER;
+                const bOrder = b.sortOrder ?? Number.MAX_SAFE_INTEGER;
+                if (aOrder === bOrder) {
+                  return a.name.localeCompare(b.name);
+                }
+                return aOrder - bOrder;
+              })
+              .slice(0, 6)
+              .map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+          </div>
+        )}
+
+        <div className="flex justify-center">
+          <Link
+            href="/shop"
+            className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white px-6 py-3 text-sm font-semibold uppercase tracking-[0.3em] text-slate-900 transition hover:bg-white/80"
+          >
+            SEE ALL BANGERS HERE
+          </Link>
+        </div>
+      </section>
+
+      <section className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-6 pb-10 sm:px-10">
+        <div className="pt-8 grid gap-8 sm:grid-cols-3">
+          {[{
+            image: "/globe-free-img.webp",
+            title: "FREE Shipping Worldwide",
+            subtitle: "FUCK YEAH",
+          }, {
+            image: "/quality-free-img.webp",
+            title: "Banger Quality",
+            subtitle: "Handpicked by kids in Bangladesh",
+          }, {
+            image: "/tag-free-img.webp",
+            title: "Banger Offers",
+            subtitle: "So good that we don’t do discounts",
+          }].map((item) => (
+            <div key={item.title} className="flex flex-col items-center gap-6 text-center">
+              <Image src={item.image} alt={item.title} width={96} height={96} className="h-24 w-24" />
+              <div>
+                <p className="text-m font-semibold uppercase tracking-[0.2em] bg-clip-text text-transparent bg-gradient-to-r from-pink-600 to-orange-400">{item.title}</p>
+                <p className="text-m bg-clip-text text-transparent bg-gradient-to-r from-slate-500 to-slate-200">{item.subtitle}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

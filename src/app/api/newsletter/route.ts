@@ -1,0 +1,36 @@
+import { NextResponse } from "next/server";
+import { z } from "zod";
+
+import { sendEmail } from "@/lib/email";
+
+const newsletterSchema = z.object({
+  email: z.string().email("Valid email required"),
+  name: z.string().max(120).optional().nullable(),
+});
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    const { email, name } = newsletterSchema.parse(body);
+
+    await sendEmail({
+      to: "newsletter@vispea.com",
+      subject: "New Vispea Storybook signup",
+      html: `
+        <p>A new subscriber has joined the Vispea Storybook.</p>
+        <p><strong>Email:</strong> ${email}</p>
+        ${name ? `<p><strong>Name:</strong> ${name}</p>` : ""}
+      `,
+      replyTo: email,
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({ error: error.errors.map((issue) => issue.message).join(", ") }, { status: 400 });
+    }
+
+    console.error("Newsletter signup error", error);
+    return NextResponse.json({ error: "Unable to submit signup. Please try again later." }, { status: 500 });
+  }
+}
