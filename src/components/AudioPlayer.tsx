@@ -361,7 +361,7 @@ const AudioPlayer: React.FC<{ initialTracks: Track[] }> = ({ initialTracks }) =>
   return (
     <div className="pointer-events-none fixed bottom-0 left-0 right-0 z-50 flex justify-start px-4 pb-4 sm:px-6">
       <div
-        className={`pointer-events-auto w-full max-w-xs rounded-3xl bg-gradient-to-r from-gray-900 to-black text-white shadow-2xl transition-transform duration-300 sm:max-w-sm lg:max-w-md ${
+        className={`pointer-events-auto w-full max-w-xs rounded-3xl opacity-70 bg-gradient-to-r from-slate-800 to-slate-900 text-white shadow-2xl transition-transform duration-300 sm:max-w-sm lg:max-w-md ${
           expanded ? "translate-y-0" : "translate-y-[calc(100%_-_56px)]"
         }`}
       >
