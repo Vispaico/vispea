@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: error.errors.map((issue) => issue.message).join(", ") }, { status: 400 });
+      return NextResponse.json({ error: error.issues.map((issue) => issue.message).join(", ") }, { status: 400 });
     }
 
     console.error("Newsletter signup error", error);
