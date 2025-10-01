@@ -73,7 +73,7 @@ export type PaypalCaptureOrderInput = z.infer<typeof paypalCaptureOrderSchema>;
 
 export const printfulWebhookEventSchema = z.object({
   type: z.string(),
-  data: z.record(z.any()),
+  data: z.record(z.string(), z.unknown()),
 });
 
 export type PrintfulWebhookEvent = z.infer<typeof printfulWebhookEventSchema>;

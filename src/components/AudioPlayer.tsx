@@ -1,3 +1,5 @@
+// AudioPlayer.tsx
+
 "use client";
 
 import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
@@ -30,92 +32,94 @@ const AudioPlayer: React.FC<{ initialTracks: Track[] }> = ({ initialTracks }) =>
     );
   }, [tracksLength]);
 
-  // Create new Howl instance on track change
-  useEffect(() => {
+// Create new Howl instance ONLY on track change (not on play/pause)
+/* eslint-disable react-hooks/exhaustive-deps */
+useEffect(() => {
+  if (howlerRef.current) {
+    howlerRef.current.unload();
+  }
+
+  howlerRef.current = new Howl({
+    src: [currentTrack.src],
+    html5: true,
+    onload: () => {
+      // Reset progress on load
+      setProgress(0);
+      // Update Media Session position to 0
+      if (navigator.mediaSession) {
+        navigator.mediaSession.setPositionState({
+          duration: howlerRef.current?.duration() || 0,
+          position: 0,
+        });
+      }
+    },
+    onend: () => {
+      // Auto-advance to next track (keeps isPlaying true to auto-play new one)
+      setCurrentTrackIndex((prev) => (prev + 1) % tracksLength);
+    },
+    onplay: () => {
+      setIsPlaying(true);
+      isInterrupted.current = false;
+    },
+    onpause: () => setIsPlaying(false),
+  });
+
+  // Auto-play new track if was playing before change
+  if (isPlaying && howlerRef.current) {
+    // Use once to play after load, avoiding race conditions
+    howlerRef.current.once('load', () => {
+      howlerRef.current?.play();
+    });
+  }
+
+  return () => {
     if (howlerRef.current) {
       howlerRef.current.unload();
     }
+  };
+}, [currentTrackIndex, currentTrack.src, tracksLength]);
+/* eslint-enable react-hooks/exhaustive-deps */
 
-    howlerRef.current = new Howl({
-      src: [currentTrack.src],
-      html5: true,
-      onload: () => {
-        // Reset progress on load
-        setProgress(0);
-        // Update Media Session position to 0
-        if (navigator.mediaSession) {
+// Progress update loop (only when playing) with heartbeat for interruptions
+useEffect(() => {
+  let animationId: number;
+  let lastProgressTime = Date.now();
+  const updateProgress = () => {
+    const howler = howlerRef.current;
+    if (howler && isPlaying) {
+      const duration = howler.duration();
+      if (duration > 0) {
+        const currentPosition = howler.seek();
+        setProgress((currentPosition / duration) * 100);
+
+        // Update Media Session position for lock screen seek
+        if (navigator.mediaSession && duration > 0) {
           navigator.mediaSession.setPositionState({
-            duration: howlerRef.current?.duration() || 0,
-            position: 0,
+            duration,
+            position: currentPosition,
           });
         }
-      },
-      onend: () => {
-        // Auto-advance to next track (keeps isPlaying true to auto-play new one)
-        setCurrentTrackIndex((prev) => (prev + 1) % tracksLength);
-      },
-      onplay: () => {
-        setIsPlaying(true);
-        isInterrupted.current = false;
-      },
-      onpause: () => setIsPlaying(false),
-    });
 
-    // If currently playing, start the new track after a brief load wait
-    if (isPlaying && howlerRef.current) {
-      // Use once to play after load, avoiding race conditions
-      howlerRef.current.once('load', () => {
-        howlerRef.current?.play();
-      });
-    }
-
-    return () => {
-      if (howlerRef.current) {
-        howlerRef.current.unload();
-      }
-    };
-  }, [currentTrackIndex, currentTrack.src, isPlaying, tracksLength]); // Added tracksLength
-
-  // Progress update loop (only when playing) with heartbeat for interruptions
-  useEffect(() => {
-    let animationId: number;
-    let lastProgressTime = Date.now();
-    const updateProgress = () => {
-      const howler = howlerRef.current;
-      if (howler && isPlaying) {
-        const duration = howler.duration();
-        if (duration > 0) {
-          const currentPosition = howler.seek();
-          setProgress((currentPosition / duration) * 100);
-
-          // Update Media Session position for lock screen seek
-          if (navigator.mediaSession && duration > 0) {
-            navigator.mediaSession.setPositionState({
-              duration,
-              position: currentPosition,
-            });
-          }
-
-          // Heartbeat: Detect if stalled (no progress in 2s, but isPlaying true)
-          if (Date.now() - lastProgressTime > 2000 && currentPosition === howler.seek()) {
-            // Likely interrupted; pause and flag
-            setIsPlaying(false);
-            isInterrupted.current = true;
-          }
-          lastProgressTime = Date.now();
+        // Heartbeat: Detect if stalled (no progress in 5s, but isPlaying true)
+        if (Date.now() - lastProgressTime > 5000 && currentPosition === howler.seek()) {
+          // Likely interrupted; pause and flag
+          setIsPlaying(false);
+          isInterrupted.current = true;
         }
-        animationId = requestAnimationFrame(updateProgress);
+        lastProgressTime = Date.now();
       }
-    };
-
-    if (isPlaying) {
-      updateProgress();
+      animationId = requestAnimationFrame(updateProgress);
     }
+  };
 
-    return () => {
-      if (animationId) cancelAnimationFrame(animationId);
-    };
-  }, [isPlaying]);
+  if (isPlaying) {
+    updateProgress();
+  }
+
+  return () => {
+    if (animationId) cancelAnimationFrame(animationId);
+  };
+}, [isPlaying]);
 
   // Sync Media Session playbackState on isPlaying changes
   useEffect(() => {
@@ -197,19 +201,21 @@ const AudioPlayer: React.FC<{ initialTracks: Track[] }> = ({ initialTracks }) =>
     };
   }, [currentTrack, isPlaying, skip]);
 
-  // Handle visibility changes for iOS interruptions (resume on foreground)
+  // Handle visibility changes for iOS interruptions (sync state, no auto-resume to avoid duplicates)
   useEffect(() => {
     const handleVisibilityChange = () => {
-      if (!document.hidden && isInterrupted.current && isPlaying) {
-        // Was interrupted, but user returned: resume
+      if (!document.hidden && isInterrupted.current) {
+        // User returned from background: Sync state if stalled, but don't auto-play to prevent duplicates
+        isInterrupted.current = false;
+        // If isPlaying is true but actually paused (system interrupt), set to false for user control
         const howler = howlerRef.current;
-        if (howler) {
-          howler.play();
-          setIsPlaying(true);
-          isInterrupted.current = false;
+        if (howler && isPlaying && howler.playing()) {
+          // Still playing fine
+        } else if (isPlaying) {
+          setIsPlaying(false); // System paused it
         }
       } else if (document.hidden && isPlaying) {
-        // Going background: allow system pause, but flag if needed
+        // Going background: Flag for potential interrupt
         isInterrupted.current = true;
       }
     };
@@ -221,6 +227,10 @@ const AudioPlayer: React.FC<{ initialTracks: Track[] }> = ({ initialTracks }) =>
   const togglePlay = () => {
     const howler = howlerRef.current;
     if (howler) {
+      // Ensure no duplicates: Pause first if somehow playing
+      if (howler.playing()) {
+        howler.pause();
+      }
       if (isPlaying) {
         howler.pause();
       } else {
