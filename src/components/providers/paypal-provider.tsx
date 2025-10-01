@@ -8,7 +8,7 @@ type Props = {
 
 const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
 const currency = process.env.NEXT_PUBLIC_PAYPAL_CURRENCY ?? "USD";
-const intent = process.env.NEXT_PUBLIC_PAYPAL_INTENT ?? "CAPTURE";
+const intent = (process.env.NEXT_PUBLIC_PAYPAL_INTENT ?? "capture").toLowerCase();
 
 export function PaypalProvider({ children }: Props) {
   if (!clientId) {
