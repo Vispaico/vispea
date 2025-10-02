@@ -69,7 +69,7 @@ export async function POST(request: Request) {
 
      // Attempt to extract the originating IP from headers (fall back to Request.ip)
     const forwardedFor = request.headers.get("x-forwarded-for");
-    const clientIp = forwardedFor?.split(",")[0]?.trim() || ("ip" in request ? (request as any).ip ?? null : null);
+    const clientIp = forwardedFor?.split(",")[0]?.trim() ?? null;
 
     const fraudResult = await screenWithFraudLabs(payload, clientIp);
 

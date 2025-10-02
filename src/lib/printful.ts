@@ -215,14 +215,25 @@ export async function listAllPrintfulProducts() {
     offset += paging.limit;
   }
 
+  const allowedOverrideKeys = new Set(
+    Object.keys(PRODUCT_OVERRIDES).filter((key) => key !== "__default"),
+  );
+
+  const filteredProducts = allowedOverrideKeys.size === 0
+    ? aggregated
+    : aggregated.filter((product) => {
+        const candidates = [product.externalId ?? null, String(product.id)];
+        return candidates.some((candidate) => candidate && allowedOverrideKeys.has(candidate));
+      });
+
   const result = {
-    products: aggregated,
-    total: aggregated.length,
+    products: filteredProducts,
+    total: filteredProducts.length,
   };
 
   cachedAllProducts = {
-    products: aggregated,
-    total: aggregated.length,
+    products: filteredProducts,
+    total: filteredProducts.length,
     expiresAt: now + CACHE_TTL_MS,
   };
 
