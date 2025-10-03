@@ -171,9 +171,11 @@ export function Footer() {
             <p className="text-sm text-slate-200">The Vispea Studio</p>
             <p className="text-sm text-slate-200">23/32 To 2 Xom Trung</p>
             <p className="text-sm text-slate-200">Phuong Dang Giang | Ngo Quyen</p>
-            <p className="text-sm text-slate-200">Haiphong</p>
-            <p className="text-sm text-slate-200">Vietnam</p>
-            <p className="text-sm text-slate-400">Business Inquiries: +84 (0) 822 992 665</p>
+            <p className="text-sm text-slate-200">Haiphong | Vietnam</p>
+            <p className="text-sm text-slate-200">Email: gobbledygook@vispea.com</p><br/>
+            <p className="text-sm text-slate-400">For Business Inquiries</p>
+            <p className="text-sm text-slate-400">Phone: +84 (0) 822 992 665</p>
+            <p className="text-sm text-slate-400">Email: studio@vispea.com</p>
           </div>
         </div>
       </div>

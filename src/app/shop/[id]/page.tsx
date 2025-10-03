@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import { ProductConfigurator } from "@/components/product-configurator";
 import { ProductCard } from "@/components/product-card";
-import { getPrintfulProduct, listPrintfulProducts } from "@/lib/printful";
+import { getPrintfulProduct, listAllPrintfulProducts } from "@/lib/printful";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -24,10 +24,13 @@ export default async function ProductPage({ params }: PageProps) {
     notFound();
   }
 
-  let similar: Awaited<ReturnType<typeof listPrintfulProducts>>["products"] = [];
+  let similar: Awaited<ReturnType<typeof listAllPrintfulProducts>>["products"] = [];
   try {
-    const response = await listPrintfulProducts({ limit: 12, offset: 0 });
-    similar = response.products.filter((item) => item.id !== product.id).slice(0, 3);
+    const response = await listAllPrintfulProducts();
+    similar = response.products
+      .filter((item) => item.id !== product.id)
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 3);
   } catch (error) {
     console.error(error);
   }
