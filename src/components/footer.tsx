@@ -48,7 +48,7 @@ export function Footer() {
       cover: "https://res.cloudinary.com/kinhcode01/image/upload/v1759215274/Vispea/images/Kuro_orange_v8rxhj.jpg",
     },
     {
-      src: "https://res.cloudinary.com/kinhcode01/video/upload/v1759292555/Vispea/Sounds/Daddy_I_Want_a_Fucking_Pony_kmnclu.mp3",
+      src: "https://res.cloudinary.com/kinhcode01/video/upload/v1759739504/Vispea/Sounds/Daddy_I_Want_a_Fucking_Pony_ctrkbz.mp3",
       title: "Daddy i Want a Fucking Pony",
       artist: "Vispea",
       cover: "https://res.cloudinary.com/kinhcode01/image/upload/v1759211326/Vispea/images/pony_orange_avgapo.jpg",
