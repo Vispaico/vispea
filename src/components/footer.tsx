@@ -145,7 +145,9 @@ export function Footer() {
         </div>
         <nav className="flex flex-col gap-3 text-sm text-center text-slate-300">
           <span className="text-xs font-semibold uppercase tracking-[0.3em] bg-clip-text text-transparent bg-gradient-to-r from-pink-600 to-orange-400">Vispea Sound Machine</span>
-          
+          <Link href="https://open.spotify.com/artist/7Mb7jeLMbEZMv5Ozye6kmm?si=yuOuRoH8RuucvzMjAZLPtQ" className="transition hover:text-white" target="_blank" rel="noreferrer">
+            Vispea Spotify Page
+          </Link>
         </nav>
         <nav className="flex flex-col gap-3 text-sm text-center text-slate-300">
           <span className="text-xs font-semibold uppercase tracking-[0.3em] bg-clip-text text-transparent bg-gradient-to-r from-pink-600 to-orange-400">Links</span>
