@@ -19,6 +19,7 @@ export function ContactForm() {
           name: String(data.get("name") ?? ""),
           email: String(data.get("email") ?? ""),
           message: String(data.get("message") ?? ""),
+          honeypot: String(data.get("honeypot") ?? ""),
         };
 
         setStatus("loading");
@@ -87,6 +88,21 @@ export function ContactForm() {
           rows={6}
           className="resize-none rounded-xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm text-white focus:border-slate-500 focus:outline-none"
           placeholder="Drop your message here..."
+        />
+      </div>
+
+      {/* Honeypot field to trap bots */}
+      <div className="absolute left-[-5000px]" aria-hidden="true">
+        <label htmlFor="honeypot" className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
+          Don't fill this out if you're human
+        </label>
+        <input
+          id="honeypot"
+          name="honeypot"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          className="rounded-xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm text-white focus:border-slate-500 focus:outline-none"
         />
       </div>
 

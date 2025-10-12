@@ -18,6 +18,7 @@ export function NewsletterForm({ className }: { className?: string }) {
         const payload = {
           name: String(data.get("name") ?? ""),
           email: String(data.get("email") ?? ""),
+          honeypot: String(data.get("honeypot") ?? ""),
         };
 
         setStatus("loading");
@@ -69,6 +70,21 @@ export function NewsletterForm({ className }: { className?: string }) {
           required
           className="rounded-xl border border-slate-600 bg-slate-900 px-4 py-3 text-sm text-white focus:border-slate-500 focus:outline-none"
           placeholder="your@email.com"
+        />
+      </div>
+
+      {/* Honeypot field to trap bots */}
+      <div className="absolute left-[-5000px]" aria-hidden="true">
+        <label htmlFor="newsletter-honeypot" className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
+          Don't fill this out if you're human
+        </label>
+        <input
+          id="newsletter-honeypot"
+          name="honeypot"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          className="rounded-xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm text-white focus:border-slate-500 focus:outline-none"
         />
       </div>
 

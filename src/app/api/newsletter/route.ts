@@ -6,12 +6,18 @@ import { sendEmail } from "@/lib/email";
 const newsletterSchema = z.object({
   email: z.string().email("Valid email required"),
   name: z.string().max(120).optional().nullable(),
+  honeypot: z.string().optional(),
 });
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { email, name } = newsletterSchema.parse(body);
+    const { email, name, honeypot } = newsletterSchema.parse(body);
+
+    if (honeypot) {
+      // This is a bot, silently ignore the submission
+      return NextResponse.json({ success: true });
+    }
 
     await sendEmail({
       to: "newsletter@vispea.com",

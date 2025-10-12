@@ -7,12 +7,18 @@ const contactSchema = z.object({
   name: z.string().min(1, "Name is required").max(120),
   email: z.string().email("Valid email required"),
   message: z.string().min(10, "Message must be at least 10 characters").max(5000),
+  honeypot: z.string().optional(),
 });
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, email, message } = contactSchema.parse(body);
+    const { name, email, message, honeypot } = contactSchema.parse(body);
+
+    if (honeypot) {
+      // This is a bot, silently ignore the submission
+      return NextResponse.json({ success: true });
+    }
 
     await sendEmail({
       to: "contact@vispea.com",
