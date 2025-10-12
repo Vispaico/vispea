@@ -94,7 +94,7 @@ export function ContactForm() {
       {/* Honeypot field to trap bots */}
       <div className="absolute left-[-5000px]" aria-hidden="true">
         <label htmlFor="honeypot" className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
-          Don't fill this out if you're human
+          Don&apos;t fill this out if you&apos;re human
         </label>
         <input
           id="honeypot"
