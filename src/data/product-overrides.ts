@@ -26,7 +26,7 @@ export const PRODUCT_OVERRIDES: ProductOverrideMap = {
     gallery: [],
   },
   
-  "3186": {
+  "68ec9329d78af5": {
     descriptionHtml: html`
       <br/><p><strong>TOO . SMOOTH . TOO . CARE .</strong></p>
       <p><strong>This product is made especially for you as soon as you swipe your card. So it takes us a bit longer to deliver it to you. We print on demand because we are too lazy to run a bloody warehouse.<br/>
@@ -63,7 +63,7 @@ Other compliance information: Meets the EU REACH requirements.</p>
     sortOrder: 10,
   },
 
-  "3104": {
+  "68ec8cdadd15d1": {
     descriptionHtml: html`
       <br/><p><strong>TOO . SMOOTH . TOO . CARE .</strong></p>
       <p><strong>This product is made especially for you as soon as you swipe your card. So it takes us a bit longer to deliver it to you. We print on demand because we are too lazy to run a bloody warehouse.<br/>
@@ -100,7 +100,7 @@ Other compliance information: Meets the EU REACH requirements.</p>
     sortOrder: 20,
   },
 
-  "3260": {
+  "68ec8d8d695581": {
     descriptionHtml: html`
       <br/><p><strong>TOO . SMOOTH . TOO . CARE .</strong></p>
       <p><strong>This product is made especially for you as soon as you swipe your card. So it takes us a bit longer to deliver it to you. We print on demand because we are too lazy to run a bloody warehouse.<br/>
@@ -137,7 +137,7 @@ Other compliance information: Meets the EU REACH requirements.</p>
     sortOrder: 30,
   },
 
-  "3398": {
+  "68ec8c83da2a71": {
     descriptionHtml: html`
       <br/><p><strong>TOO . SMOOTH . TOO . CARE .</strong></p>
       <p><strong>This product is made especially for you as soon as you swipe your card. So it takes us a bit longer to deliver it to you. We print on demand because we are too lazy to run a bloody warehouse.<br/>
@@ -174,7 +174,7 @@ Other compliance information: Meets the EU REACH requirements.</p>
     sortOrder: 40,
   },
 
-  "3424": {
+  "68ec8c3f8d53e9": {
     descriptionHtml: html`
       <br/><p><strong>TOO . SMOOTH . TOO . CARE .</strong></p>
       <p><strong>This product is made especially for you as soon as you swipe your card. So it takes us a bit longer to deliver it to you. We print on demand because we are too lazy to run a bloody warehouse.<br/>
@@ -211,7 +211,7 @@ Other compliance information: Meets the EU REACH requirements.</p>
     sortOrder: 50,
   },
 
-  "3601": {
+  "68ec8d2f1a7a26": {
     descriptionHtml: html`
       <br/><p><strong>TOO . SMOOTH . TOO . CARE .</strong></p>
       <p><strong>This product is made especially for you as soon as you swipe your card. So it takes us a bit longer to deliver it to you. We print on demand because we are too lazy to run a bloody warehouse.<br/>
@@ -248,7 +248,7 @@ Other compliance information: Meets the EU REACH requirements.</p>
     sortOrder: 60,
   },
 
-  "3822": {
+  "68ec87d3864654": {
     descriptionHtml: html`
       <br/><p><strong>TOO . SMOOTH . TOO . CARE .</strong></p>
       <p><strong>This product is made especially for you as soon as you swipe your card. So it takes us a bit longer to deliver it to you. We print on demand because we are too lazy to run a bloody warehouse.<br/>
@@ -285,7 +285,7 @@ Other compliance information: Meets the EU REACH requirements.</p>
     sortOrder: 70,
   },
 
-  "3526": {
+  "68ec8d0d611fd1": {
     descriptionHtml: html`
       <br/><p><strong>TOO . SMOOTH . TOO . CARE .</strong></p>
       <p><strong>This product is made especially for you as soon as you swipe your card. So it takes us a bit longer to deliver it to you. We print on demand because we are too lazy to run a bloody warehouse.<br/>
@@ -322,7 +322,7 @@ Other compliance information: Meets the EU REACH requirements.</p>
     sortOrder: 80,
   },
 
-  "3239": {
+  "68ec934d06a4d6": {
     descriptionHtml: html`
       <br/><p><strong>TOO . SMOOTH . TOO . CARE .</strong></p>
      <p><strong>This product is made especially for you as soon as you swipe your card. So it takes us a bit longer to deliver it to you. We print on demand because we are too lazy to run a bloody warehouse.<br/>
@@ -359,7 +359,7 @@ Other compliance information: Meets the EU REACH requirements.</p>
     sortOrder: 90,
   },
 
-  "3277": {
+  "68ec8d48d29f74": {
     descriptionHtml: html`
       <br/><p><strong>TOO . SMOOTH . TOO . CARE .</strong></p>
       <p><strong>This product is made especially for you as soon as you swipe your card. So it takes us a bit longer to deliver it to you. We print on demand because we are too lazy to run a bloody warehouse.<br/>
@@ -396,7 +396,7 @@ Other compliance information: Meets the EU REACH requirements.</p>
     sortOrder: 100,
   },
 
-  "3577": {
+  "68ec8cf5858315": {
     descriptionHtml: html`
       <br/><p><strong>TOO . SMOOTH . TOO . CARE .</strong></p>
       <p><strong>This product is made especially for you as soon as you swipe your card. So it takes us a bit longer to deliver it to you. We print on demand because we are too lazy to run a bloody warehouse.<br/>
@@ -433,7 +433,7 @@ Other compliance information: Meets the EU REACH requirements.</p>
     sortOrder: 110,
   },
 
-  "3222": {
+  "68ec8cbf637f38": {
     descriptionHtml: html`
       <br/><p><strong>TOO . SMOOTH . TOO . CARE .</strong></p>
       <p><strong>This product is made especially for you as soon as you swipe your card. So it takes us a bit longer to deliver it to you. We print on demand because we are too lazy to run a bloody warehouse.<br/>
@@ -470,7 +470,7 @@ Other compliance information: Meets the EU REACH requirements.</p>
     sortOrder: 120,
   },
 
-  "3305": {
+  "68ec8ca7c6fa51": {
     descriptionHtml: html`
       <br/><p><strong>TOO . SMOOTH . TOO . CARE .</strong></p>
      <p><strong>This product is made especially for you as soon as you swipe your card. So it takes us a bit longer to deliver it to you. We print on demand because we are too lazy to run a bloody warehouse.<br/>
@@ -507,7 +507,7 @@ Other compliance information: Meets the EU REACH requirements.</p>
     sortOrder: 130,
   },
 
-  "3848": {
+  "68ec8bdd4734f1": {
     descriptionHtml: html`
       <br/><p><strong>TOO . SMOOTH . TOO . CARE .</strong></p>
       <p><strong>This product is made especially for you as soon as you swipe your card. So it takes us a bit longer to deliver it to you. We print on demand because we are too lazy to run a bloody warehouse.<br/>
@@ -544,7 +544,7 @@ Other compliance information: Meets the EU REACH requirements.</p>
     sortOrder: 140,
   },
 
-  "3861": {
+  "68ec8bf47a0c58": {
     descriptionHtml: html`
       <br/><p><strong>TOO . SMOOTH . TOO . CARE .</strong></p>
       <p><strong>This product is made especially for you as soon as you swipe your card. So it takes us a bit longer to deliver it to you. We print on demand because we are too lazy to run a bloody warehouse.<br/>
@@ -581,7 +581,7 @@ Other compliance information: Meets the EU REACH requirements.</p>
     sortOrder: 150,
   },
 
-  "3809": {
+  "68ec87aadac9a9": {
     descriptionHtml: html`
       <br/><p><strong>TOO . SMOOTH . TOO . CARE .</strong></p>
      <p><strong>This product is made especially for you as soon as you swipe your card. So it takes us a bit longer to deliver it to you. We print on demand because we are too lazy to run a bloody warehouse.<br/>
@@ -618,7 +618,7 @@ Other compliance information: Meets the EU REACH requirements.</p>
     sortOrder: 160,
   },
 
-  "3770": {
+  "68ec87f8301919": {
     descriptionHtml: html`
       <br/><p><strong>TOO . SMOOTH . TOO . CARE .</strong></p>
       <p><strong>This product is made especially for you as soon as you swipe your card. So it takes us a bit longer to deliver it to you. We print on demand because we are too lazy to run a bloody warehouse.<br/>
