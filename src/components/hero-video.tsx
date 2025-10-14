@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGun } from "@fortawesome/free-solid-svg-icons";
+import LightRays from "@/components/LightRays";
 
 const videoSrc = process.env.NEXT_PUBLIC_CLOUDINARY_HERO_VIDEO_URL;
 const posterSrc = process.env.NEXT_PUBLIC_CLOUDINARY_HERO_POSTER_URL;
@@ -23,8 +24,21 @@ export function HeroVideo() {
       ) : (
         <div className="absolute inset-0 h-full w-full bg-slate-900" />
       )}
-      <div className="absolute inset-0 bg-black/70" aria-hidden="true" />
-      <div className="relative z-10 flex h-full flex-col items-start justify-center gap-6 px-8 py-48 sm:px-16 lg:px-24">
+      <div className="absolute inset-0 z-10 bg-black/90" aria-hidden="true" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 top-24 sm:top-16 md:top-10 lg:top-0 z-20">
+        <LightRays
+          raysOrigin="top-center"
+          raysColor="#009fff"
+          raysSpeed={1.5}
+          lightSpread={0.8}
+          rayLength={1.2}
+          followMouse
+          mouseInfluence={0.1}
+          noiseAmount={0.1}
+          distortion={0.05}
+        />
+      </div>
+      <div className="relative z-30 flex h-full flex-col items-start justify-center gap-6 px-8 py-48 sm:px-16 lg:px-24">
         <p className="text-sm font-medium uppercase tracking-[0.4em] text-white/70">
           Vispea Studio
         </p>

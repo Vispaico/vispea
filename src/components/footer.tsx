@@ -119,6 +119,12 @@ export function Footer() {
       artist: "Vispea",
       cover: "https://res.cloudinary.com/kinhcode01/image/upload/v1759211048/Vispea/images/be_light_orange_fnd0nc.jpg",
     },
+    {
+      src: "https://res.cloudinary.com/kinhcode01/video/upload/v1760461259/Vispea/Sounds/Daddy_s_Girl_mbss9m.mp3",
+      title: "Daddy's Girl",
+      artist: "Vispea",
+      cover: "https://res.cloudinary.com/kinhcode01/image/upload/v1760459128/Vispea/images/dads_grl_orange_ksbp2s.jpg",
+    },
   ];
 
   return (
