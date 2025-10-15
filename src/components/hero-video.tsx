@@ -3,12 +3,67 @@
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGun } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useState } from "react";
 import LightRays from "@/components/LightRays";
 
 const videoSrc = process.env.NEXT_PUBLIC_CLOUDINARY_HERO_VIDEO_URL;
 const posterSrc = process.env.NEXT_PUBLIC_CLOUDINARY_HERO_POSTER_URL;
+const MOBILE_BREAKPOINT = 768;
 
 export function HeroVideo() {
+  const [headerOffset, setHeaderOffset] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const query = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`);
+    const handleChange = (event: MediaQueryListEvent) => {
+      setIsMobile(event.matches);
+    };
+    setIsMobile(query.matches);
+    if (typeof query.addEventListener === "function") {
+      query.addEventListener("change", handleChange);
+      return () => {
+        query.removeEventListener("change", handleChange);
+      };
+    }
+    query.addListener(handleChange);
+    return () => {
+      query.removeListener(handleChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!isMobile) {
+      setHeaderOffset(0);
+      return;
+    }
+    const header = document.querySelector<HTMLElement>("header");
+    if (!header) {
+      setHeaderOffset(0);
+      return;
+    }
+    const updateOffset = () => {
+      setHeaderOffset(header.getBoundingClientRect().height);
+    };
+    updateOffset();
+    let resizeObserver: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== "undefined") {
+      resizeObserver = new ResizeObserver(updateOffset);
+      resizeObserver.observe(header);
+    } else {
+      window.addEventListener("resize", updateOffset);
+    }
+    return () => {
+      if (resizeObserver) {
+        resizeObserver.disconnect();
+      } else {
+        window.removeEventListener("resize", updateOffset);
+      }
+    };
+  }, [isMobile]);
+
   return (
     <section className="relative h-[100svh] w-full overflow-hidden bg-black text-white">
       {videoSrc ? (
@@ -25,13 +80,16 @@ export function HeroVideo() {
         <div className="absolute inset-0 h-full w-full bg-slate-900" />
       )}
       <div className="absolute inset-0 z-10 bg-black/80" aria-hidden="true" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 top-24 sm:top-16 md:top-10 lg:top-0 z-20">
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-20"
+        style={{ top: isMobile ? headerOffset : 0 }}
+      >
         <LightRays
           raysOrigin="top-center"
           raysColor="#008fff"
           raysSpeed={1.5}
           lightSpread={0.8}
-          rayLength={1.2}
+          rayLength={isMobile ? 1.6 : 1.2}
           followMouse
           mouseInfluence={0.1}
           noiseAmount={0.1}
