@@ -1,6 +1,6 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import './LiquidEther.css';
 
@@ -56,6 +56,7 @@ interface LiquidEtherWebGL {
 }
 
 const defaultColors = ['#5227FF', '#FF9FFC', '#B19EEF'];
+const MOBILE_BREAKPOINT = 768;
 
 export default function LiquidEther({
   mouseForce = 20,
@@ -85,9 +86,64 @@ export default function LiquidEther({
   const intersectionObserverRef = useRef<IntersectionObserver | null>(null);
   const isVisibleRef = useRef<boolean>(true);
   const resizeRafRef = useRef<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const query = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`);
+    const handleChange = (event: MediaQueryListEvent) => {
+      setIsMobile(event.matches);
+    };
+    setIsMobile(query.matches);
+    if (typeof query.addEventListener === 'function') {
+      query.addEventListener('change', handleChange);
+      return () => {
+        query.removeEventListener('change', handleChange);
+      };
+    }
+    query.addListener(handleChange);
+    return () => {
+      query.removeListener(handleChange);
+    };
+  }, []);
+
+  const {
+    mouseForce: effectiveMouseForce,
+    cursorSize: effectiveCursorSize,
+    resolution: effectiveResolution,
+    autoSpeed: effectiveAutoSpeed,
+    autoIntensity: effectiveAutoIntensity,
+    takeoverDuration: effectiveTakeoverDuration,
+    autoResumeDelay: effectiveAutoResumeDelay,
+    autoDemo: effectiveAutoDemo
+  } = useMemo(
+    () => ({
+      mouseForce: isMobile ? mouseForce * 0.4 : mouseForce,
+      cursorSize: isMobile ? Math.max(35, cursorSize * 0.5) : cursorSize,
+      resolution: isMobile ? Math.min(resolution, 0.3) : resolution,
+      autoSpeed: isMobile ? autoSpeed * 0.5 : autoSpeed,
+      autoIntensity: isMobile ? autoIntensity * 0.45 : autoIntensity,
+      takeoverDuration: isMobile ? Math.min(takeoverDuration, 0.2) : takeoverDuration,
+      autoResumeDelay: isMobile ? autoResumeDelay + 800 : autoResumeDelay,
+      autoDemo
+    }),
+    [
+      autoDemo,
+      autoIntensity,
+      autoResumeDelay,
+      autoSpeed,
+      cursorSize,
+      isMobile,
+      mouseForce,
+      resolution,
+      takeoverDuration
+    ]
+  );
 
   useEffect(() => {
     if (!mountRef.current) return;
+
+    const pixelRatioCap = isMobile ? 1.4 : 2;
 
     function makePaletteTexture(stops: string[]): THREE.DataTexture {
       let arr: string[];
@@ -135,7 +191,7 @@ export default function LiquidEther({
       clock: THREE.Clock | null = null;
       init(container: HTMLElement) {
         this.container = container;
-        this.pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+        this.pixelRatio = Math.min(window.devicePixelRatio || 1, pixelRatioCap);
         this.resize();
         this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         // Always transparent
@@ -1067,11 +1123,11 @@ export default function LiquidEther({
 
     const webgl = new WebGLManager({
       $wrapper: container,
-      autoDemo,
-      autoSpeed,
-      autoIntensity,
-      takeoverDuration,
-      autoResumeDelay,
+      autoDemo: effectiveAutoDemo,
+      autoSpeed: effectiveAutoSpeed,
+      autoIntensity: effectiveAutoIntensity,
+      takeoverDuration: effectiveTakeoverDuration,
+      autoResumeDelay: effectiveAutoResumeDelay,
       autoRampDuration
     });
     webglRef.current = webgl;
@@ -1082,18 +1138,18 @@ export default function LiquidEther({
       if (!sim) return;
       const prevRes = sim.options.resolution;
       Object.assign(sim.options, {
-        mouse_force: mouseForce,
-        cursor_size: cursorSize,
+        mouse_force: effectiveMouseForce,
+        cursor_size: effectiveCursorSize,
         isViscous,
         viscous,
         iterations_viscous: iterationsViscous,
         iterations_poisson: iterationsPoisson,
         dt,
         BFECC,
-        resolution,
+        resolution: effectiveResolution,
         isBounce
       });
-      if (resolution !== prevRes) sim.resize();
+      if (effectiveResolution !== prevRes) sim.resize();
     };
     applyOptionsFromProps();
     webgl.start();
@@ -1149,21 +1205,22 @@ export default function LiquidEther({
     };
   }, [
     BFECC,
-    cursorSize,
+    colors,
     dt,
+    effectiveAutoDemo,
+    effectiveAutoIntensity,
+    effectiveAutoResumeDelay,
+    effectiveAutoSpeed,
+    effectiveCursorSize,
+    effectiveMouseForce,
+    effectiveResolution,
+    effectiveTakeoverDuration,
     isBounce,
+    isMobile,
     isViscous,
     iterationsPoisson,
     iterationsViscous,
-    mouseForce,
-    resolution,
     viscous,
-    colors,
-    autoDemo,
-    autoSpeed,
-    autoIntensity,
-    takeoverDuration,
-    autoResumeDelay,
     autoRampDuration
   ]);
 
@@ -1174,44 +1231,44 @@ export default function LiquidEther({
     if (!sim) return;
     const prevRes = sim.options.resolution;
     Object.assign(sim.options, {
-      mouse_force: mouseForce,
-      cursor_size: cursorSize,
+      mouse_force: effectiveMouseForce,
+      cursor_size: effectiveCursorSize,
       isViscous,
       viscous,
       iterations_viscous: iterationsViscous,
       iterations_poisson: iterationsPoisson,
       dt,
       BFECC,
-      resolution,
+      resolution: effectiveResolution,
       isBounce
     });
     if (webgl.autoDriver) {
-      webgl.autoDriver.enabled = autoDemo;
-      webgl.autoDriver.speed = autoSpeed;
-      webgl.autoDriver.resumeDelay = autoResumeDelay;
+      webgl.autoDriver.enabled = effectiveAutoDemo;
+      webgl.autoDriver.speed = effectiveAutoSpeed;
+      webgl.autoDriver.resumeDelay = effectiveAutoResumeDelay;
       webgl.autoDriver.rampDurationMs = autoRampDuration * 1000;
       if (webgl.autoDriver.mouse) {
-        webgl.autoDriver.mouse.autoIntensity = autoIntensity;
-        webgl.autoDriver.mouse.takeoverDuration = takeoverDuration;
+        webgl.autoDriver.mouse.autoIntensity = effectiveAutoIntensity;
+        webgl.autoDriver.mouse.takeoverDuration = effectiveTakeoverDuration;
       }
     }
-    if (resolution !== prevRes) sim.resize();
+    if (effectiveResolution !== prevRes) sim.resize();
   }, [
-    mouseForce,
-    cursorSize,
+    effectiveAutoDemo,
+    effectiveAutoIntensity,
+    effectiveAutoResumeDelay,
+    effectiveAutoSpeed,
+    effectiveCursorSize,
+    effectiveMouseForce,
+    effectiveResolution,
+    effectiveTakeoverDuration,
     isViscous,
     viscous,
     iterationsViscous,
     iterationsPoisson,
     dt,
     BFECC,
-    resolution,
     isBounce,
-    autoDemo,
-    autoSpeed,
-    autoIntensity,
-    takeoverDuration,
-    autoResumeDelay,
     autoRampDuration
   ]);
 

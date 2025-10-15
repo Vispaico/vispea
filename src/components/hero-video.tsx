@@ -24,11 +24,11 @@ export function HeroVideo() {
       ) : (
         <div className="absolute inset-0 h-full w-full bg-slate-900" />
       )}
-      <div className="absolute inset-0 z-10 bg-black/90" aria-hidden="true" />
+      <div className="absolute inset-0 z-10 bg-black/80" aria-hidden="true" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 top-24 sm:top-16 md:top-10 lg:top-0 z-20">
         <LightRays
           raysOrigin="top-center"
-          raysColor="#009fff"
+          raysColor="#008fff"
           raysSpeed={1.5}
           lightSpread={0.8}
           rayLength={1.2}
