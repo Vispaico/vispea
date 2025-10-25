@@ -36,7 +36,7 @@ export function Footer() {
       cover: "https://res.cloudinary.com/kinhcode01/image/upload/v1759167607/Vispea/images/Hoxton_orange_ggaibe.jpg",
     },
     {
-      src: "https://res.cloudinary.com/kinhcode01/video/upload/v1759292558/Vispea/Sounds/Fuck_Wars_and_Drink_Absinth_ipqn8l.mp3",
+      src: "https://res.cloudinary.com/kinhcode01/video/upload/v1761392701/Vispea/Sounds/Fuck_Wars_and_Drink_Absinthe_mbx6i3.mp3",
       title: "Fuck Wars and Drink Absinth",
       artist: "Vispea",
       cover: "https://res.cloudinary.com/kinhcode01/image/upload/v1759211306/Vispea/images/fuck_wars_orange_aaobm8.jpg",
@@ -114,7 +114,7 @@ export function Footer() {
       cover: "https://res.cloudinary.com/kinhcode01/image/upload/v1759211313/Vispea/images/never_orange_brenlo.jpg",
     },
     {
-      src: "https://res.cloudinary.com/kinhcode01/video/upload/v1759292551/Vispea/Sounds/Be_The_Light_lnxfdm.mp3",
+      src: "https://res.cloudinary.com/kinhcode01/video/upload/v1761393064/Vispea/Sounds/Be_the_Light_ao0rcc.mp3",
       title: "Be The Light",
       artist: "Vispea",
       cover: "https://res.cloudinary.com/kinhcode01/image/upload/v1759211048/Vispea/images/be_light_orange_fnd0nc.jpg",
