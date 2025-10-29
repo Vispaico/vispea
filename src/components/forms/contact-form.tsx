@@ -16,7 +16,6 @@ export function ContactForm() {
         const form = event.currentTarget;
         const data = new FormData(form);
         const payload = {
-          name: String(data.get("name") ?? ""),
           email: String(data.get("email") ?? ""),
           message: String(data.get("message") ?? ""),
           honeypot: String(data.get("honeypot") ?? ""),
@@ -46,21 +45,6 @@ export function ContactForm() {
         }
       }}
     >
-      <div className="grid gap-2">
-        <label htmlFor="name" className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
-          Name
-        </label>
-        <input
-          id="name"
-          name="name"
-          type="text"
-          required
-          maxLength={120}
-          className="rounded-xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm text-white focus:border-slate-500 focus:outline-none"
-          placeholder="Vispea legend"
-        />
-      </div>
-
       <div className="grid gap-2">
         <label htmlFor="email" className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
           Email

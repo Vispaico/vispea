@@ -4,7 +4,6 @@ import { z } from "zod";
 import { sendEmail } from "@/lib/email";
 
 const contactSchema = z.object({
-  name: z.string().min(1, "Name is required").max(120),
   email: z.string().email("Valid email required"),
   message: z.string().min(10, "Message must be at least 10 characters").max(5000),
   honeypot: z.string().optional(),
@@ -13,7 +12,7 @@ const contactSchema = z.object({
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, email, message, honeypot } = contactSchema.parse(body);
+    const { email, message, honeypot } = contactSchema.parse(body);
 
     if (honeypot) {
       // This is a bot, silently ignore the submission
@@ -22,10 +21,9 @@ export async function POST(request: Request) {
 
     await sendEmail({
       to: "contact@vispea.com",
-      subject: `New contact message from ${name}`,
+      subject: "New contact message",
       html: `
         <p>You have received a new message via the contact form.</p>
-        <p><strong>Name:</strong> ${name}</p>
         <p><strong>Email:</strong> ${email}</p>
         <p><strong>Message:</strong></p>
         <p>${message.replace(/\n/g, "<br/>")}</p>

@@ -5,14 +5,13 @@ import { sendEmail } from "@/lib/email";
 
 const newsletterSchema = z.object({
   email: z.string().email("Valid email required"),
-  name: z.string().max(120).optional().nullable(),
   honeypot: z.string().optional(),
 });
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { email, name, honeypot } = newsletterSchema.parse(body);
+    const { email, honeypot } = newsletterSchema.parse(body);
 
     if (honeypot) {
       // This is a bot, silently ignore the submission
@@ -25,7 +24,6 @@ export async function POST(request: Request) {
       html: `
         <p>A new subscriber has joined the Vispea Storybook.</p>
         <p><strong>Email:</strong> ${email}</p>
-        ${name ? `<p><strong>Name:</strong> ${name}</p>` : ""}
       `,
       replyTo: email,
     });

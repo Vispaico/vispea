@@ -16,7 +16,6 @@ export function NewsletterForm({ className }: { className?: string }) {
         const form = event.currentTarget;
         const data = new FormData(form);
         const payload = {
-          name: String(data.get("name") ?? ""),
           email: String(data.get("email") ?? ""),
           honeypot: String(data.get("honeypot") ?? ""),
         };
@@ -45,20 +44,6 @@ export function NewsletterForm({ className }: { className?: string }) {
         }
       }}
     >
-      <div className="grid gap-2">
-        <label htmlFor="storybook-name" className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
-          Your Name (optional)
-        </label>
-        <input
-          id="storybook-name"
-          name="name"
-          type="text"
-          maxLength={120}
-          className="rounded-xl border border-slate-600 bg-slate-900 px-4 py-3 text-sm text-white focus:border-slate-500 focus:outline-none"
-          placeholder="Herr Awesome"
-        />
-      </div>
-
       <div className="grid gap-2">
         <label htmlFor="storybook-email" className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
           Your Email
