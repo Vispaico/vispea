@@ -18,8 +18,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Vispea Shop",
-  description: "Modern print-on-demand storefront powered by Printful and PayPal",
+  title: "Vispea | Too Smooth To Care",
+  description: "Welcome to Vispea. Wear the chaos ‘til it’s beat, like your old tapes from ‘93",
 };
 
 export default function RootLayout({
