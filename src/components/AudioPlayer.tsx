@@ -376,7 +376,13 @@ const AudioPlayer: React.FC<{ initialTracks: Track[] }> = ({ initialTracks }) =>
           <div className="flex items-center space-x-3">
             <div className="relative h-11 w-11 overflow-hidden rounded-xl bg-gray-700">
               {currentTrack.cover ? (
-                <Image src={currentTrack.cover} alt={currentTrack.title} fill sizes="44px" className="object-cover" />
+                <Image
+                  src={currentTrack.cover}
+                  alt={`${currentTrack.title} cover art`}
+                  fill
+                  sizes="44px"
+                  className="object-cover"
+                />
               ) : (
                 <span className="flex h-full w-full items-center justify-center text-lg">🎵</span>
               )}

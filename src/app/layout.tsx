@@ -5,6 +5,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { PaypalProvider } from "@/components/providers/paypal-provider";
 import LiquidEther from "@/components/LiquidEther";
+import { getMetadataBase, getSiteUrl } from "@/lib/seo";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -17,9 +18,32 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl = getSiteUrl();
+const defaultTitle = "Vispea | Too Smooth To Care";
+const defaultDescription = "Welcome to Vispea. Wear the chaos ‘til it’s beat, like your old tapes from ‘93";
+
 export const metadata: Metadata = {
-  title: "Vispea | Too Smooth To Care",
-  description: "Welcome to Vispea. Wear the chaos ‘til it’s beat, like your old tapes from ‘93",
+  metadataBase: getMetadataBase(),
+  title: {
+    default: defaultTitle,
+    template: "%s | Vispea",
+  },
+  description: defaultDescription,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: defaultTitle,
+    description: defaultDescription,
+    url: siteUrl,
+    siteName: "Vispea",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: defaultTitle,
+    description: defaultDescription,
+  },
 };
 
 export default function RootLayout({

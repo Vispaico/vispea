@@ -17,6 +17,10 @@ export function ProductCard({ product }: Props) {
 
   const selectedVariant = product.variants.find((variant) => variant.id === variantId);
 
+  const productAlt = selectedVariant
+    ? `${product.name} – ${selectedVariant.name}`
+    : `${product.name} product photo`;
+
   const price = selectedVariant ? Number.parseFloat(selectedVariant.retailPrice) : 0;
   const currency = selectedVariant?.currency ?? "USD";
 
@@ -33,7 +37,7 @@ export function ProductCard({ product }: Props) {
           {selectedVariant?.image ? (
             <Image
               src={selectedVariant.image}
-              alt={selectedVariant.name}
+              alt={productAlt}
               width={400}
               height={400}
               className="h-full w-full object-cover transition duration-500 group-hover:scale-145"
@@ -41,7 +45,7 @@ export function ProductCard({ product }: Props) {
           ) : product.thumbnailUrl ? (
             <Image
               src={product.thumbnailUrl}
-              alt={product.name}
+              alt={`${product.name} product photo`}
               width={400}
               height={400}
               className="h-full w-full object-cover transition duration-500 group-hover:scale-105"

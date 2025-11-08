@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 /* 1. Main Tailwind Import */
 @import "tailwindcss";
 @import "tw-animate-css";

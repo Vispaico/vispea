@@ -52,6 +52,8 @@ export function ProductConfigurator({ product }: Props) {
   const price = variant ? Number.parseFloat(variant.retailPrice) : 0;
   const currency = variant?.currency ?? "USD";
 
+  const mainImageAlt = variant ? `${product.name} – ${variant.name}` : `${product.name} product image`;
+
   const formattedPrice = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency,
@@ -87,7 +89,7 @@ export function ProductConfigurator({ product }: Props) {
           {images[selectedImageIndex] ? (
             <Image
               src={images[selectedImageIndex]!}
-              alt={variant?.name ?? product.name}
+              alt={mainImageAlt}
               width={1000}
               height={1000}
               className="h-full w-full object-cover"

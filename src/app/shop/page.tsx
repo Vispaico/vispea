@@ -1,6 +1,16 @@
+import type { Metadata } from "next";
+
 import { ProductCard } from "@/components/product-card";
 import { StorePagination } from "@/components/store-pagination";
 import { listAllPrintfulProducts } from "@/lib/printful";
+
+export const metadata: Metadata = {
+  title: "Shop All Products | Vispea",
+  description: "Explore the full Vispea collection – limited graffiti-inspired shirts with free worldwide shipping.",
+  alternates: {
+    canonical: "/shop",
+  },
+};
 
 type PageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;

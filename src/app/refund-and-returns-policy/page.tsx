@@ -3,6 +3,9 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Refund & Returns Policy | Vispea",
   description: "VISPEA return policy for defective or incorrect orders.",
+  alternates: {
+    canonical: "/refund-and-returns-policy",
+  },
 };
 
 export default function RefundAndReturnsPolicyPage() {

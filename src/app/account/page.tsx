@@ -1,3 +1,13 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Account | Vispea",
+  description: "Sign in to manage your Vispea orders and future loyalty perks.",
+  alternates: {
+    canonical: "/account",
+  },
+};
+
 export default function AccountPage() {
   return (
     <div className="grid gap-6 text-center">

@@ -5,6 +5,9 @@ import { ContactForm } from "@/components/forms/contact-form";
 export const metadata: Metadata = {
   title: "Contact | Vispea",
   description: "Reach out to Vispea – we’re here for questions, collabs, and all that street-level noise.",
+  alternates: {
+    canonical: "/contact",
+  },
 };
 
 export default function ContactPage() {

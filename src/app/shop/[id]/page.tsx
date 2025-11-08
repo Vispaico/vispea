@@ -1,13 +1,75 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { ProductConfigurator } from "@/components/product-configurator";
 import { ProductCard } from "@/components/product-card";
 import { getPrintfulProduct, listAllPrintfulProducts } from "@/lib/printful";
+import { buildCanonicalUrl, stripHtmlToText } from "@/lib/seo";
 
 type PageProps = {
   params: Promise<{ id: string }>;
 };
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const resolvedParams = await params;
+  const productId = Number.parseInt(resolvedParams.id, 10);
+
+  if (!Number.isFinite(productId)) {
+    return {
+      title: "Product Not Found | Vispea",
+      description: "The product you were looking for could not be found.",
+      alternates: {
+        canonical: "/shop",
+      },
+    };
+  }
+
+  try {
+    const product = await getPrintfulProduct(productId);
+    const canonicalPath = `/shop/${product.id}`;
+    const description =
+      stripHtmlToText(product.description) ?? `Explore ${product.name} from Vispea with free worldwide shipping.`;
+    const ogImage = product.variants.find((variant) => variant.image)?.image ?? product.thumbnailUrl ?? undefined;
+
+    return {
+      title: `${product.name} | Vispea`,
+      description,
+      alternates: {
+        canonical: canonicalPath,
+      },
+      openGraph: {
+        title: `${product.name} | Vispea`,
+        description,
+        type: "product",
+        url: buildCanonicalUrl(canonicalPath),
+        images: ogImage
+          ? [
+              {
+                url: ogImage,
+                alt: `${product.name} product photo`,
+              },
+            ]
+          : undefined,
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: `${product.name} | Vispea`,
+        description,
+        images: ogImage ? [ogImage] : undefined,
+      },
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      title: "Product Not Found | Vispea",
+      description: "The product you were looking for could not be found.",
+      alternates: {
+        canonical: "/shop",
+      },
+    };
+  }
+}
 
 export default async function ProductPage({ params }: PageProps) {
   const resolvedParams = await params;

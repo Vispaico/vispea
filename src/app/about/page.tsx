@@ -5,6 +5,9 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "About Us | Vispea",
   description: "The story behind Vispea – underground grit, graffiti roots, and shirts built for the ones who never softened up.",
+  alternates: {
+    canonical: "/about",
+  },
 };
 
 const heroImage = "https://res.cloudinary.com/kinhcode01/image/upload/v1759164989/Vispea/images/Vispea_about_001_wfhren.webp";
@@ -26,7 +29,7 @@ export default function AboutPage() {
         <div className="relative order-2 overflow-hidden rounded-3xl border border-slate-800 bg-slate-900 lg:order-1">
           <Image
             src={heroImage}
-            alt="Nice Ass"
+            alt="Vispea graffiti photography with bold neon lighting"
             width={300}
             height={500}
             className="h-full w-full object-cover"
@@ -56,7 +59,7 @@ export default function AboutPage() {
         <div className="relative order-2 overflow-hidden rounded-3xl border border-slate-800 bg-slate-900 lg:order-1">
           <Image
             src={bandImage}
-            alt="Graffiti roots"
+            alt="Vispea band performing with graffiti backdrop"
             width={600}
             height={400}
             className="h-full w-full object-cover"
@@ -76,7 +79,7 @@ export default function AboutPage() {
         <div className="relative overflow-hidden rounded-3xl border border-slate-800 bg-slate-900">
           <Image
             src={closingImage}
-            alt="Vispea manifesto"
+            alt="Vispea manifesto typography artwork"
             width={2000}
             height={1125}
             className="h-full w-full object-cover"
@@ -96,7 +99,7 @@ export default function AboutPage() {
         <div className="relative overflow-hidden rounded-3xl border border-slate-800 bg-slate-900">
           <Image
             src={graffitiImage}
-            alt="Vispea manifesto"
+            alt="Vispea street art mural close-up"
             width={2000}
             height={1125}
             className="h-full w-full object-cover"
