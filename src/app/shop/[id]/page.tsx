@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       openGraph: {
         title: `${product.name} | Vispea`,
         description,
-        type: "product",
+        type: "website",
         url: buildCanonicalUrl(canonicalPath),
         images: ogImage
           ? [
