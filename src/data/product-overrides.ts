@@ -691,5 +691,79 @@ Other compliance information: Meets the EU REACH requirements.</p>
       ],
     sortOrder: 180,
   },
+
+  "68ee74b4464967": {
+    descriptionHtml: html`
+      <br/><p><strong>TOO . SMOOTH . TOO . CARE .</strong></p>
+      <p><strong>This product is made especially for you as soon as you swipe your card. So it takes us a bit longer to deliver it to you. We print on demand because we are too lazy to run a bloody warehouse.<br/>
+      If you don't have patience - do not order!</strong></p>
+      <p>* The sizes correspond to a smaller size in the US market, so US customers should order a size up.</p>
+      <p><strong>The boring stuff:</strong><br/>
+Made from 100% organic ring-spun cotton, it's high-quality, super comfy, and eco-friendly.</p>
+<p>• 100% organic ring-spun cotton
+• Fabric weight: 5.3 oz./yd.² (180 g/m²)
+• Single jersey
+• Medium fit
+• Set-in sleeves
+• 1 × 1 rib at collar
+• Wide double-needle topstitch on the sleeves and bottom hems
+• Self-fabric neck tape (inside, back of the neck)
+• Blank product sourced from Bangladesh</p>
+<p>• Traceability:
+- Weaving—Bangladesh
+- Dyeing—Bangladesh
+- Manufacturing—Bangladesh
+• Contains 0% recycled polyester
+• Contains 0% dangerous substances</p>
+<p>Age restrictions: For adults
+EU Warranty: 2 years
+Other compliance information: Meets the EU REACH requirements.</p>
+<p>In compliance with the General Product Safety Regulation (GPSR), <b>Oak inc.</b> and <b>SINDEN VENTURES LIMITED</b> ensure that all consumer products offered are safe and meet EU standards. For any product safety related inquiries or concerns, please contact our EU representative at <b>gpsr@sindenventures.com</b>. You can also write to us at <b>123 Main Street, Anytown, Country</b> or<b> Markou Evgenikou 11, Mesa Geitonia, 4002, Limassol, Cyprus.</b></p>
+    `,
+    gallery: [
+      "https://res.cloudinary.com/kinhcode01/image/upload/v1763735904/Vispea/images/i_am_love_clear_vlsbu3.webp",
+      "https://res.cloudinary.com/kinhcode01/image/upload/v1763735904/Vispea/images/i_am_love_gsptlh.webp",
+      "https://res.cloudinary.com/kinhcode01/image/upload/v1763735904/Vispea/images/i_am_love_orange_eg53xb.jpg",
+      "https://res.cloudinary.com/kinhcode01/image/upload/v1763735904/Vispea/images/i_am_love_black_spkoto.jpg"
+      ],
+    sortOrder: 190,
+  },
+
+  "68ec965da2b669": {
+    descriptionHtml: html`
+      <br/><p><strong>TOO . SMOOTH . TOO . CARE .</strong></p>
+      <p><strong>This product is made especially for you as soon as you swipe your card. So it takes us a bit longer to deliver it to you. We print on demand because we are too lazy to run a bloody warehouse.<br/>
+      If you don't have patience - do not order!</strong></p>
+      <p>* The sizes correspond to a smaller size in the US market, so US customers should order a size up.</p>
+      <p><strong>The boring stuff:</strong><br/>
+Made from 100% organic ring-spun cotton, it's high-quality, super comfy, and eco-friendly.</p>
+<p>• 100% organic ring-spun cotton
+• Fabric weight: 5.3 oz./yd.² (180 g/m²)
+• Single jersey
+• Medium fit
+• Set-in sleeves
+• 1 × 1 rib at collar
+• Wide double-needle topstitch on the sleeves and bottom hems
+• Self-fabric neck tape (inside, back of the neck)
+• Blank product sourced from Bangladesh</p>
+<p>• Traceability:
+- Weaving—Bangladesh
+- Dyeing—Bangladesh
+- Manufacturing—Bangladesh
+• Contains 0% recycled polyester
+• Contains 0% dangerous substances</p>
+<p>Age restrictions: For adults
+EU Warranty: 2 years
+Other compliance information: Meets the EU REACH requirements.</p>
+<p>In compliance with the General Product Safety Regulation (GPSR), <b>Oak inc.</b> and <b>SINDEN VENTURES LIMITED</b> ensure that all consumer products offered are safe and meet EU standards. For any product safety related inquiries or concerns, please contact our EU representative at <b>gpsr@sindenventures.com</b>. You can also write to us at <b>123 Main Street, Anytown, Country</b> or<b> Markou Evgenikou 11, Mesa Geitonia, 4002, Limassol, Cyprus.</b></p>
+    `,
+    gallery: [
+      "https://res.cloudinary.com/kinhcode01/image/upload/v1763736086/Vispea/images/love_spray_clear_xxdxag.webp",
+      "https://res.cloudinary.com/kinhcode01/image/upload/v1763736086/Vispea/images/love_spray_dqszp3.webp",
+      "https://res.cloudinary.com/kinhcode01/image/upload/v1763736086/Vispea/images/love_spray_orange_gobrkn.jpg",
+      "https://res.cloudinary.com/kinhcode01/image/upload/v1763736086/Vispea/images/love_spray_black_totvpf.jpg"
+      ],
+    sortOrder: 200,
+  },
   
 };
