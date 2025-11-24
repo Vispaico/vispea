@@ -35,7 +35,7 @@ export function Header() {
     <header className="border-b border-slate-800/50 bg-slate-950/90">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4 sm:px-8">
         <Link href="/" className="flex items-center gap-3">
-          <Image src="/VISPEA_footer_WH.webp" alt="Vispea" width={120} height={32} priority />
+          <Image src="/VISPEA-Logo.webp" alt="Vispea" width={120} height={32} priority />
         </Link>
 
         <div className="flex items-center gap-4">
