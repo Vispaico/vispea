@@ -11,6 +11,7 @@ import { calculateCartTotals, useCartStore } from "@/store/cart";
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/shop", label: "Shop" },
+  { href: "/fanzine", label: "Fanzine" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ];
@@ -18,12 +19,35 @@ const navLinks = [
 export function Header() {
   const items = useCartStore((state) => state.items);
   const pathname = usePathname();
+  const isHome = pathname === "/";
   const { totalQuantity, totalAmount, currency } = useMemo(() => calculateCartTotals(items), [items]);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [solidBg, setSolidBg] = useState(!isHome);
 
   useEffect(() => {
     setMenuOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    if (!isHome) {
+      setSolidBg(true);
+      return;
+    }
+
+    const updateHeaderState = () => {
+      if (typeof window === "undefined") {
+        return;
+      }
+      const threshold = 420;
+      setSolidBg(window.scrollY > threshold);
+    };
+
+    updateHeaderState();
+    window.addEventListener("scroll", updateHeaderState, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", updateHeaderState);
+    };
+  }, [isHome]);
 
   const formattedTotal = new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -32,10 +56,16 @@ export function Header() {
   }).format(totalAmount);
 
   return (
-    <header className="">
+    <header
+      className={`border-b transition-all duration-300 ${
+        solidBg
+          ? "border-white/5 bg-slate-950/85 backdrop-blur-xl shadow-[0_12px_45px_rgba(15,23,42,0.65)]"
+          : "border-transparent bg-transparent"
+      }`}
+    >
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4 sm:px-8">
         <Link href="/" className="flex items-center gap-3">
-          <Image src="/Logo Vispea footer fade yellow.webp" alt="Vispea" width={170} height={60} priority />
+          <Image src="/Logo Vispea footer fade yellow.webp" alt="Vispea" width={140} height={40} priority />
         </Link>
 
         <div className="flex items-center gap-4">

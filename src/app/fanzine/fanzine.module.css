@@ -1,0 +1,33 @@
+.page {
+  background-color: #f5f1df;
+  color: #0f172a;
+}
+
+.pageSpeckles {
+  background-image: radial-gradient(circle at 10% 20%, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
+    radial-gradient(circle at 70% 30%, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+  background-size: 120px 120px;
+}
+
+.fieldTexture {
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.15) 0,
+    rgba(255, 255, 255, 0.15) 6px,
+    transparent 6px,
+    transparent 18px
+  );
+}
+
+.starOverlay {
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+
+.fontRansom {
+  font-family: var(--font-fanzine-ransom);
+}
+
+.fontPunch {
+  font-family: var(--font-fanzine-punch);
+}

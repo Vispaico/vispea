@@ -1,12 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 type Status = "idle" | "loading" | "success" | "error";
 
-export function NewsletterForm({ className }: { className?: string }) {
+type NewsletterFormProps = {
+  className?: string;
+  variant?: "subtle" | "loud";
+};
+
+export function NewsletterForm({ className, variant = "subtle" }: NewsletterFormProps) {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string | null>(null);
+
+  const buttonClasses = useMemo(() => {
+    if (variant === "loud") {
+      return "inline-flex items-center justify-center gap-2 rounded-full border-4 border-black bg-gradient-to-r from-yellow-300 via-pink-400 to-orange-400 px-6 py-3 text-xs font-black uppercase tracking-[0.4em] text-slate-900 shadow-[5px_5px_0_#000] transition hover:-translate-y-1 hover:-translate-x-1 disabled:cursor-not-allowed disabled:opacity-60";
+    }
+
+    return "inline-flex items-center justify-center rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-slate-900 transition hover:bg-white/80 disabled:cursor-not-allowed disabled:bg-slate-500";
+  }, [variant]);
+
+  const buttonLabel = status === "loading" ? "Joining…" : "Join the Storybook";
+
+  const buttonContent = variant === "loud" ? (
+    <>
+      <span>{buttonLabel}</span>
+      <span aria-hidden>✺</span>
+    </>
+  ) : (
+    buttonLabel
+  );
 
   return (
     <form
@@ -73,12 +97,8 @@ export function NewsletterForm({ className }: { className?: string }) {
         />
       </div>
 
-      <button
-        type="submit"
-        disabled={status === "loading"}
-        className="inline-flex items-center justify-center rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-slate-900 transition hover:bg-white/80 disabled:cursor-not-allowed disabled:bg-slate-500"
-      >
-        {status === "loading" ? "Joining…" : "Join the Storybook"}
+      <button type="submit" disabled={status === "loading"} className={buttonClasses}>
+        {buttonContent}
       </button>
 
       {status === "success" ? (
