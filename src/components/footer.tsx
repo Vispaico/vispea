@@ -203,7 +203,7 @@ export function Footer() {
           </div>
           <div className="relative pt-6 py-4 text-center gap-3 flex justify-center">
           <Link href="/" className="flex w-fit items-center gap-3">
-            <Image src="/VISPEA-Logo-fade.webp" alt="Vispea" width={160} height={40} />
+            <Image src="/Logo Vispea footer fade yellow.webp" alt="Vispea" width={260} height={70} />
           </Link>
           </div>
           <div className="relative px-6 py-4 text-center gap-3 flex justify-center">

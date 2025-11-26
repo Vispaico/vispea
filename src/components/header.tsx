@@ -32,14 +32,14 @@ export function Header() {
   }).format(totalAmount);
 
   return (
-    <header className="border-b border-slate-800/50 bg-slate-950/90">
+    <header className="">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4 sm:px-8">
         <Link href="/" className="flex items-center gap-3">
-          <Image src="/VISPEA-Logo-fade.webp" alt="Vispea" width={120} height={32} priority />
+          <Image src="/Logo Vispea footer fade yellow.webp" alt="Vispea" width={170} height={60} priority />
         </Link>
 
         <div className="flex items-center gap-4">
-          <nav className="hidden items-center gap-6 text-sm font-medium text-slate-200 md:flex">
+          <nav className="hidden items-center gap-6 text-lg font-medium text-slate-200 md:flex">
             {navLinks.map((link) => {
               const isActive = pathname === link.href || pathname.startsWith(`${link.href}/`);
               return (
