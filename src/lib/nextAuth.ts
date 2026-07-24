@@ -1,5 +1,9 @@
+import type { Session } from "next-auth";
+
+type GetServerSessionParams = Parameters<typeof import("next-auth/next").getServerSession>;
+
 // Unified next-auth getServerSession shim — try common import paths at runtime.
-export async function getServerSession(...args: any[]) {
+export async function getServerSession(...args: GetServerSessionParams): Promise<Session | null> {
   // Try preferred path first
   try {
     const mod = await import("next-auth/next");
@@ -19,4 +23,6 @@ export async function getServerSession(...args: any[]) {
   } catch (err) {
     throw new Error("next-auth getServerSession not available: " + String(err));
   }
+
+  return null;
 }

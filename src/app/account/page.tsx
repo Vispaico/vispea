@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { Session } from "next-auth";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AccountPage() {
-  let session;
+  let session: Session | null = null;
   try {
     session = await _getServerSession(authOptions);
   } catch {
