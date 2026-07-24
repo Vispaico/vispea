@@ -10,12 +10,16 @@ import { useCartStore } from "@/store/cart";
 
 type Props = {
   product: PrintfulProduct;
+  signedIn?: boolean;
+  initialFavourited?: boolean;
 };
 
-export function ProductConfigurator({ product }: Props) {
+export function ProductConfigurator({ product, signedIn = false, initialFavourited = false }: Props) {
   const [variantId, setVariantId] = useState(product.variants[0]?.id ?? null);
   const [quantity, setQuantity] = useState(1);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [favourited, setFavourited] = useState(initialFavourited);
+  const [favouriteBusy, setFavouriteBusy] = useState(false);
   const addItem = useCartStore((state) => state.addItem);
 
   const variant = useMemo(
@@ -187,6 +191,42 @@ export function ProductConfigurator({ product }: Props) {
         >
           Add to cart
         </button>
+
+        {signedIn ? (
+          <button
+            type="button"
+            disabled={favouriteBusy}
+            onClick={async () => {
+              setFavouriteBusy(true);
+              try {
+                const response = await fetch("/api/account/favourites/toggle", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ productId: product.id }),
+                });
+                const json = await response.json();
+                if (!response.ok) {
+                  throw new Error(json.error ?? "Unable to update favourite");
+                }
+                setFavourited(Boolean(json.data?.favourited));
+              } catch (err) {
+                console.error(err);
+              } finally {
+                setFavouriteBusy(false);
+              }
+            }}
+            className="inline-flex items-center justify-center rounded-full border border-slate-700 bg-slate-950 px-6 py-2.5 text-sm font-semibold text-white transition hover:border-slate-500 hover:bg-slate-900 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {favourited ? "Saved" : "Save to favourites"}
+          </button>
+        ) : (
+          <a
+            href="/account/sign-in"
+            className="inline-flex items-center justify-center rounded-full border border-slate-700 bg-slate-950 px-6 py-2.5 text-sm font-semibold text-white/80 transition hover:border-slate-500 hover:bg-slate-900 hover:text-white"
+          >
+            Sign in to save
+          </a>
+        )}
 
         {summaryHtml ? (
           <div className="flex flex-col gap-3">

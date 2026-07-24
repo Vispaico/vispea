@@ -8,6 +8,7 @@ import { PaypalProvider } from "@/components/providers/paypal-provider";
 import LiquidEther from "@/components/LiquidEther";
 import { getMetadataBase, getSiteUrl } from "@/lib/seo";
 import "./globals.css";
+import { AgentWidget } from "@/components/AgentWidget";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -62,6 +63,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-TRWWTMMJ');`}
         </Script>
+        <script defer src="https://analytics.vispaico.com/script.js" data-website-id="c5fa184a-59b2-48c7-ac8e-59f1a9833660"></script>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-950 text-slate-100`}
@@ -94,6 +96,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               {children}
             </main>
             <Footer />
+            {/* Agent widget injected site-wide */}
+            <AgentWidget />
             <ExitIntentPopup />
           </div>
         </PaypalProvider>

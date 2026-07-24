@@ -1,9 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getServerSession as _getServerSession } from "next-auth/next";
+import { getServerSession as shimGetServerSession } from "@/lib/nextAuth";
+import { and, eq } from "drizzle-orm";
 
 import { ProductConfigurator } from "@/components/product-configurator";
 import { ProductCard } from "@/components/product-card";
+import { authOptions } from "@/lib/auth";
+import { db } from "@/lib/db";
+import { favourites } from "@/lib/db/schema";
 import { getPrintfulProduct, listAllPrintfulProducts } from "@/lib/printful";
 import { buildCanonicalUrl, stripHtmlToText } from "@/lib/seo";
 
@@ -78,12 +84,29 @@ export default async function ProductPage({ params }: PageProps) {
     notFound();
   }
 
+  let session;
+  try {
+    session = await _getServerSession(authOptions);
+  } catch {
+    session = await shimGetServerSession(authOptions);
+  }
+
   let product;
   try {
     product = await getPrintfulProduct(productId);
   } catch (error) {
     console.error(error);
     notFound();
+  }
+
+  let initialFavourited = false;
+  if (session?.user) {
+    const existing = await db
+      .select({ id: favourites.id })
+      .from(favourites)
+      .where(and(eq(favourites.userId, session.user.id), eq(favourites.productId, product.id)))
+      .limit(1);
+    initialFavourited = Boolean(existing[0]);
   }
 
   let similar: Awaited<ReturnType<typeof listAllPrintfulProducts>>["products"] = [];
@@ -111,7 +134,11 @@ export default async function ProductPage({ params }: PageProps) {
         <span className="text-white">{product.name}</span>
       </nav>
 
-      <ProductConfigurator product={product} />
+      <ProductConfigurator
+        product={product}
+        signedIn={Boolean(session?.user)}
+        initialFavourited={initialFavourited}
+      />
 
       {similar.length > 0 ? (
         <section className="flex flex-col gap-6">

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { PaypalCheckout } from "@/components/paypal-checkout";
 import { COUNTRIES } from "@/lib/countries";
@@ -26,6 +26,67 @@ export default function CheckoutPage() {
   const totals = useMemo(() => calculateCartTotals(items), [items]);
   const [recipient, setRecipient] = useState(initialRecipient);
   const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const hydrateFromAccount = async () => {
+      try {
+        const response = await fetch("/api/account/me", { method: "GET" });
+        if (!response.ok) return;
+        const json = (await response.json()) as {
+          data: null | { defaultAddress: null | Record<string, unknown> };
+        };
+        const addr = json.data?.defaultAddress as
+          | null
+          | {
+              name: string;
+              email: string;
+              address1: string;
+              address2?: string | null;
+              city: string;
+              state?: string | null;
+              zip: string;
+              country: string;
+              phone?: string | null;
+            };
+
+        if (!addr || cancelled) return;
+
+        setRecipient((prev) => {
+          const userAlreadyTyped =
+            prev.name.trim() ||
+            prev.email.trim() ||
+            prev.address1.trim() ||
+            prev.city.trim() ||
+            prev.zip.trim() ||
+            (prev.phone ?? "").trim();
+
+          if (userAlreadyTyped) return prev;
+
+          return {
+            ...prev,
+            name: addr.name ?? prev.name,
+            email: addr.email ?? prev.email,
+            address1: addr.address1 ?? prev.address1,
+            address2: addr.address2 ?? prev.address2,
+            city: addr.city ?? prev.city,
+            state: addr.state ?? prev.state,
+            zip: addr.zip ?? prev.zip,
+            country: addr.country ?? prev.country,
+            phone: addr.phone ?? prev.phone,
+          };
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    void hydrateFromAccount();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const isFormValid = useMemo(() => {
     return (

@@ -1,8 +1,14 @@
+import crypto from "node:crypto";
+
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 
+import { and, eq } from "drizzle-orm";
+
 import { capturePaypalOrder } from "@/lib/paypal";
 import { submitPrintfulOrder } from "@/lib/printful";
+import { db } from "@/lib/db";
+import { addresses, orderItems, orders, users } from "@/lib/db/schema";
 import { orderRequestSchema } from "@/lib/validators";
 
 type FraudLabsResponse = {
@@ -85,6 +91,126 @@ export async function POST(request: Request) {
 
     const capture = await capturePaypalOrder(payload.paypalOrderId);
     const printful = await submitPrintfulOrder(payload);
+
+    const now = new Date();
+    const totalCents = payload.items.reduce(
+      (total, item) => total + Math.round(item.price * 100) * item.quantity,
+      0,
+    );
+
+    const recipientEmail = payload.recipient.email.trim().toLowerCase();
+    const recipientName = payload.recipient.name.trim();
+
+    await db.transaction(async (tx) => {
+      const existingOrder = await tx
+        .select({ id: orders.id })
+        .from(orders)
+        .where(eq(orders.paypalOrderId, payload.paypalOrderId))
+        .limit(1);
+
+      if (existingOrder[0]) {
+        await tx
+          .update(orders)
+          .set({
+            printfulOrderId: printful.id,
+            printfulStatus: printful.status,
+            updatedAt: now,
+          })
+          .where(eq(orders.id, existingOrder[0].id));
+        return;
+      }
+
+      const existingUser = await tx
+        .select({ id: users.id })
+        .from(users)
+        .where(eq(users.email, recipientEmail))
+        .limit(1);
+
+      const userId = existingUser[0]?.id ?? crypto.randomUUID();
+
+      if (!existingUser[0]) {
+        await tx.insert(users).values({
+          id: userId,
+          email: recipientEmail,
+          name: recipientName || null,
+          emailVerified: null,
+          image: null,
+        });
+      }
+
+      const [defaultAddress] = await tx
+        .select({ id: addresses.id })
+        .from(addresses)
+        .where(and(eq(addresses.userId, userId), eq(addresses.isDefault, true)))
+        .limit(1);
+
+      await tx.update(addresses).set({ isDefault: false, updatedAt: now }).where(eq(addresses.userId, userId));
+
+      if (defaultAddress) {
+        await tx
+          .update(addresses)
+          .set({
+            isDefault: true,
+            name: payload.recipient.name,
+            email: payload.recipient.email,
+            address1: payload.recipient.address1,
+            address2: payload.recipient.address2 ?? null,
+            city: payload.recipient.city,
+            state: payload.recipient.state ?? null,
+            zip: payload.recipient.zip,
+            country: payload.recipient.country,
+            phone: payload.recipient.phone ?? null,
+            updatedAt: now,
+          })
+          .where(eq(addresses.id, defaultAddress.id));
+      } else {
+        await tx.insert(addresses).values({
+          id: crypto.randomUUID(),
+          userId,
+          isDefault: true,
+          name: payload.recipient.name,
+          email: payload.recipient.email,
+          address1: payload.recipient.address1,
+          address2: payload.recipient.address2 ?? null,
+          city: payload.recipient.city,
+          state: payload.recipient.state ?? null,
+          zip: payload.recipient.zip,
+          country: payload.recipient.country,
+          phone: payload.recipient.phone ?? null,
+          createdAt: now,
+          updatedAt: now,
+        });
+      }
+
+      const orderId = crypto.randomUUID();
+
+      await tx.insert(orders).values({
+        id: orderId,
+        userId,
+        paypalOrderId: payload.paypalOrderId,
+        printfulOrderId: printful.id,
+        printfulStatus: printful.status,
+        currency: payload.items[0]?.currency ?? "USD",
+        totalCents,
+        recipientSnapshot: JSON.stringify(payload.recipient),
+        createdAt: now,
+        updatedAt: now,
+      });
+
+      await tx.insert(orderItems).values(
+        payload.items.map((item) => ({
+          id: crypto.randomUUID(),
+          orderId,
+          productId: item.productId,
+          productName: item.productName,
+          variantId: item.variantId,
+          variantName: item.variantName,
+          quantity: item.quantity,
+          priceCents: Math.round(item.price * 100),
+          currency: item.currency,
+        })),
+      );
+    });
 
     return NextResponse.json({ data: { capture, printful } });
   } catch (error) {

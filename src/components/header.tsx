@@ -14,6 +14,7 @@ const navLinks = [
   { href: "/fanzine", label: "Fanzine" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
+  { href: "/account", label: "Account" },
 ];
 
 export function Header() {

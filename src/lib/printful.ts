@@ -154,6 +154,15 @@ async function printfulFetch<T>(endpoint: string, init?: RequestInit): Promise<T
   return response.json() as Promise<T>;
 }
 
+export async function getPrintfulOrder(orderId: number) {
+  if (!Number.isFinite(orderId)) {
+    throw new Error("Invalid Printful order id");
+  }
+
+  const response = await printfulFetch<{ result: Record<string, unknown> }>(`/orders/${orderId}`);
+  return response.result;
+}
+
 type CachedAllProducts = {
   products: Awaited<ReturnType<typeof listPrintfulProducts>>["products"];
   total: number;
