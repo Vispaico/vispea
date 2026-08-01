@@ -4,9 +4,13 @@ import { z } from "zod";
 import { sendEmail } from "@/lib/email";
 
 const newsletterSchema = z.object({
-  email: z.string().email("Valid email required"),
+  email: z.string().email("Valid email required").max(320),
   honeypot: z.string().optional(),
 });
+
+function sanitizeHtml(str: string) {
+  return String(str).replace(/<[^>]*>/g, "");
+}
 
 export async function POST(request: Request) {
   try {
@@ -18,14 +22,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true });
     }
 
+    // Sanitize email before use in email HTML
+    const safeEmail = email.replace(/[\r\n]/g, "").trim();
+
     await sendEmail({
       to: "newsletter@vispea.com",
       subject: "New Vispea Storybook signup",
       html: `
         <p>A new subscriber has joined the Vispea Storybook.</p>
-        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Email:</strong> ${safeEmail.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</p>
       `,
-      replyTo: email,
+      replyTo: safeEmail,
     });
 
     return NextResponse.json({ success: true });

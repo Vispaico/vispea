@@ -4,10 +4,14 @@ import { z } from "zod";
 import { sendEmail } from "@/lib/email";
 
 const contactSchema = z.object({
-  email: z.string().email("Valid email required"),
+  email: z.string().email("Valid email required").max(320),
   message: z.string().min(10, "Message must be at least 10 characters").max(5000),
   honeypot: z.string().optional(),
 });
+
+function sanitizeHtml(str: string) {
+  return String(str).replace(/<[^>]*>/g, "");
+}
 
 export async function POST(request: Request) {
   try {
@@ -19,16 +23,20 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true });
     }
 
+    // Sanitize user input before use in email HTML
+    const safeEmail = email.replace(/[\r\n]/g, "").trim();
+    const safeMessage = sanitizeHtml(message);
+
     await sendEmail({
       to: "contact@vispea.com",
       subject: "New contact message",
       html: `
         <p>You have received a new message via the contact form.</p>
-        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Email:</strong> ${safeEmail.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</p>
         <p><strong>Message:</strong></p>
-        <p>${message.replace(/\n/g, "<br/>")}</p>
+        <p>${safeMessage.replace(/\n/g, "<br/>")}</p>
       `,
-      replyTo: email,
+      replyTo: safeEmail,
     });
 
     return NextResponse.json({ success: true });
